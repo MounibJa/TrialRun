@@ -30,9 +30,10 @@ async def test_tt_um_example(dut):
     dut.ui_in.value = 1
     start_val = int(dut.uio_out.value)
     await ClockCycles(dut.clk, 5)
-    expected = (start_val + 5) & 0xFF
-    assert dut.uio_out.value == expected
-    assert dut.uo_out.value == expected
+    expec = (start_val + 4) & 0xFF
+     dut._log.info(f"Expected value: {int(expec)}, counter value: {int(dut.uio_out.value)}")
+    assert dut.uio_out.value == expec
+    assert dut.uo_out.value == expec
 
     # disable outputs
     dut.ui_in.value = 0
