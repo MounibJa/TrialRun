@@ -26,26 +26,43 @@ async def test_tt_um_example(dut):
     assert dut.uio_out.value == 0
     assert dut.uo_out.value == 0
 
-    # enable outputs and count
-    dut.ui_in.value = 1
-    start_val = int(dut.uio_out.value)
+    # Loading a value
+    dut.ui_in.value = 0b11   # load=1, OE=1
+    dut.uio_in.value = 101
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 0
+    dut.ui_in.value = 0b01   # load=1, OE=1
+    dut.uio_in.value = 101
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_out.value == 101
+    assert dut.uo_out.value == 0  # OE=0, output should be 0
+    assert dut.uio_oe.value == 0  
+    dut._log.info("test passed for loading a value when oe is on and when its off")
+    
+    # no load, start incrementing but still oe off
+    dut.ui_in.value = 0b00
     await ClockCycles(dut.clk, 5)
-    expec = (start_val + 4) & 0xFF
-    dut._log.info(f"Expected value: {expec}, counter value: {int(dut.uio_out.value)}")
-    assert dut.uio_out.value == expec
-    assert dut.uo_out.value == expec
+    expected = (123 + 5) & 0xFF
+    assert dut.uio_out.value == expected
+    assert dut.uo_out.value == 0
+    assert dut.uio_oe.value == 0
 
+    dut.ui_in.value = 0b10   # load=0, OE=1
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_oe.value == 0xFF
+    assert dut.uo_out.value == dut.uio_out.value
+    
     # disable outputs
     dut.ui_in.value = 0
     await ClockCycles(dut.clk, 1)
     assert dut.uio_oe.value == 0
     assert dut.uo_out.value == 0
 
-    # re-enable outputs
-    dut.ui_in.value = 1
-    await ClockCycles(dut.clk, 1)
-    assert dut.uio_oe.value == 0xFF
-    assert dut.uo_out.value == dut.uio_out.value
+    # increase again with OE on
+    await ClockCycles(dut.clk, 3)
+    expected = (expected + 3) & 0xFF
+    assert dut.uio_out.value == expected
+    assert dut.uo_out.value == expected
 
     # resetting again
     dut.rst_n.value = 0
