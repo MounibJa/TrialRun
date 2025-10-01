@@ -33,9 +33,9 @@ async def test_tt_um_example(dut):
     dut.ui_in.value = 0b01   # load=1, OE=1
     dut.uio_in.value = 101
     await ClockCycles(dut.clk, 1)
-    assert dut.uio_out.value == 101
-    assert dut.uo_out.value == 0  # OE=0, output should be 0
-    assert dut.uio_oe.value == 0  
+    assert dut.uio_out.value == 101, f"value should 101, got {int(dut.uo_out.value)}"
+    assert dut.uo_out.value == 0, f" got {int(dut.uio_out.value)}"  # OE=0, output should be 0
+    assert dut.uio_oe.value == 0  f"got {int(dut.uio_oe.value)}"
     dut._log.info("test passed for loading a value when oe is on and when its off")
     
     # no load, start incrementing but still oe off
