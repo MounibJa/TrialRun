@@ -22,10 +22,12 @@ module tt_um_example (
     wire out_ena = ui_in[0];
     
     always @(negedge rst_n or posedge clk) begin
-        if(!rst_n) 
+        if(!rst_n) begin
             counts<= 8'd0;
-        else
+        end  else if( out_ena & !) begin
             counts <= counts+ 1'd1;
+            
+        end
     end
     
   // All output pins must be assigned. If not used, assign to 0.
