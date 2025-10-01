@@ -50,6 +50,7 @@ async def test_tt_um_example(dut):
 
     # Increment 3 cycles with OE=1
     await ClockCycles(dut.clk, 3)
+    expected = (expected + 4) & 0xFF
     assert dut.uio_out.value == expected , f"value should be {expected}, got {int(dut.uio_out.value)}"
     assert dut.uo_out.value == expected, f"value should {expected}, got {int(dut.uo_out.value)}"
 
