@@ -19,7 +19,7 @@ module tt_um_example (
 );
     reg [7:0] counts;
 
-    wire out_enable = ui_in[0];
+    wire out_ena = ui_in[0];
     
     always @(negedge rst_n or posedge clk) begin
         if(!rst_n) 
@@ -32,8 +32,8 @@ module tt_um_example (
 
     
   assign uio_out = counts;
-  assign uio_oe  = {8{out_enable}};
-  assign uo_out = out_enable ? counts : 8'b0;
+  assign uio_oe  = {8{out_ena}};
+  assign uo_out = out_ena ? counts : 8'b0;
 
   // List all unused inputs to prevent warnings
     wire _unused = &{ena, uio_in, ui_in[7:1], 1'b0};
