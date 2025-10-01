@@ -26,6 +26,13 @@ async def test_tt_um_example(dut):
     assert dut.uio_out.value == 0
     assert dut.uo_out.value == 0
 
+    # Loading a value (load=1, OE=1)
+    dut.ui_in.value = 0b11
+    dut.uio_in.value = 101
+    await ClockCycles(dut.clk, 2)
+    assert dut.uio_out.value == 2, f"value should 101, got {int(dut.uio_out.value)}"
+    assert dut.uo_out.value == 1, f"OE=0 so output should be 0, got {int(dut.uo_out.value)}"
+    assert dut.uio_oe.value == 1, f"OE pin should be 0, got {int(dut.uio_oe.value)}"
     # Loading a value (load=1, OE=0)
     dut.ui_in.value = 0b01
     dut.uio_in.value = 101
