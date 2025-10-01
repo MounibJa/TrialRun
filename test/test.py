@@ -42,7 +42,7 @@ async def test_tt_um_example(dut):
     # no load, start incrementing but still oe off
     dut.ui_in.value = 0b00
     await ClockCycles(dut.clk, 5)
-    expected = (123 + 5) & 0xFF
+    expected = (101 + 5) & 0xFF
     assert dut.uio_out.value == expected
     assert dut.uo_out.value == 0
     assert dut.uio_oe.value == 0
