@@ -7,34 +7,41 @@ from cocotb.triggers import ClockCycles
 
 
 @cocotb.test()
-async def test_project(dut):
-    dut._log.info("Start")
+async def test_tt_um_example(dut):
 
-    # Set the clock period to 10 us (100 KHz)
+    dut._log.info( "Beginning")
     clock = Clock(dut.clk, 10, units="us")
     cocotb.start_soon(clock.start())
-
-    # Reset
-    dut._log.info("Reset")
-    dut.ena.value = 1
-    dut.ui_in.value = 0
-    dut.uio_in.value = 0
+    
+     # resetting and disabling inputs to ensure counter starts at 0
     dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10)
+    dut.ui_in.value = 0    
+    dut.uio_in.value = 0
+    dut.ena.value = 1
+    await ClockCycles(dut.clk, 3)
     dut.rst_n.value = 1
-
-    dut._log.info("Test project behavior")
-
-    # Set the input values you want to test
-    dut.ui_in.value = 20
-    dut.uio_in.value = 30
-
-    # Wait for one clock cycle to see the output values
     await ClockCycles(dut.clk, 1)
+    dut._log.info("Counter should now be 0")
+    assert dut.uio_out.value == 0
+    assert dut.uo_out.value == 0
+    dut._log.info("checked if it became 0")
+    dut._log.info("Setting OE to 1 to enable outputs")
+    
+    dut.ui_in.value = 0b1   
+    start_val = int(dut.uio_out.value)
+    await ClockCycles(dut.clk, 5) 
+    expected_val = (start_val + 5) & 0xFF
+    assert dut.uio_out.value == expected_val #checking if values match what w eexpect
+    
+    dut._log.info(f"value of the counter currently {int(dut.uio_out.value)}")
 
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 50
+    dut.ui_in.value = 0b0   # setting OE to 0 load enabling to 0
+    await ClockCycles(dut.clk, 1)
+    assert dut.uio_oe.value == 0
+    dut._log.info("Tri-state disable check passed (uio_oe=0).")
+    dut.ui_in.value = 0b1
+    await ClockCycles(dut.clk, 1)
+    assert dut.uo_out.value == dut.uio_out.value
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+
+    dut._log.info("Passed tests")
