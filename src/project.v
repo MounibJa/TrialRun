@@ -24,7 +24,7 @@ module tt_um_example (
     always @(negedge rst_n or posedge clk) begin
         if(!rst_n) begin
             counts<= 8'd0;
-        end  else if( out_ena & !) begin
+        end  else if( out_ena) begin
             counts <= counts+ 1'd1;
             
         end
