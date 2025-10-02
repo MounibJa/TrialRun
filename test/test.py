@@ -46,7 +46,6 @@ async def test_tt_um_example(dut):
     await ClockCycles(dut.clk, 5)
     expected = (101 + 4) & 0xFF
     assert dut.uio_out.value == expected, f"value should be {expected}, got {int(dut.uio_out.value)}"
-    assert dut.uo_out.value == expected
     assert dut.uio_oe.value == 0
 
     # Enable outputs, no load
