@@ -53,7 +53,7 @@ async def test_tt_um_example(dut):
     dut.ui_in.value = 0b10
     await ClockCycles(dut.clk, 1)
     assert dut.uio_oe.value == 0xFF
-    assert dut.uo_out.value == dut.uio_out.value
+    assert dut.uo_out.value == "ZZZZZZZZ"
 
     # Increment 3 cycles with OE=1
     await ClockCycles(dut.clk, 3)
