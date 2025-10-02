@@ -30,7 +30,7 @@ module tt_um_example (
 
     assign uio_out = counts;
     assign uio_oe  = {8{oecrtl}};    // drive UIO only when OE=1
-    assign uo_out  = oecrtl ? counts : 8'b0;
+    assign uo_out  = oecrtl ? counts : 8'bz;
 
     wire _unused = &{ena, ui_in[7:2], 1'b0};
 
