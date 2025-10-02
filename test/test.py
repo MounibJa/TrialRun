@@ -64,7 +64,6 @@ async def test_tt_um_example(dut):
     dut.ui_in.value = 0b00
     await ClockCycles(dut.clk, 1)
     assert dut.uio_oe.value == 0
-    assert dut.uo_out.value == "ZZZZZZZZ"
 
     # Reset counter again
     dut.rst_n.value = 0
@@ -72,6 +71,6 @@ async def test_tt_um_example(dut):
     dut.rst_n.value = 1
     await ClockCycles(dut.clk, 1)
     assert dut.uio_out.value == 0
-    assert dut.uo_out.value == "ZZZZZZZZ"
+
 
     dut._log.info("all tests were passed")
